@@ -26,21 +26,21 @@ const ListBooks = ({ wantToRead, currentlyReading, read }) => {
                 {shelf === "Currently Reading" && (
                   <ol className="books-grid">
                     {currentlyReading.map((book) => (
-                      <Book book={book} />
+                      <Book key={book.id} book={book} />
                     ))}
                   </ol>
                 )}
                 {shelf === "Want to Read" && (
                   <ol className="books-grid">
                     {wantToRead.map((book) => (
-                      <Book book={book} />
+                      <Book key={book.id} book={book} />
                     ))}
                   </ol>
                 )}
                 {shelf === "Read" && (
                   <ol className="books-grid">
                     {read.map((book) => (
-                      <Book book={book} />
+                      <Book key={book.id} book={book} />
                     ))}
                   </ol>
                 )}
