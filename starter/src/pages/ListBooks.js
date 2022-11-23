@@ -5,13 +5,6 @@ import Book from "../components/Book";
 const listOfShelves = ["Currently Reading", "Want to Read", "Read"];
 
 const ListBooks = ({ wantToRead, currentlyReading, read }) => {
-  if (
-    wantToRead.length === 0 &&
-    currentlyReading.length === 0 &&
-    read.length === 0
-  ) {
-    return <h1>Loading...</h1>;
-  }
   return (
     <div className="list-books">
       <div className="list-books-title">
