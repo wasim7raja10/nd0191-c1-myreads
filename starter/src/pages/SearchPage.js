@@ -13,13 +13,15 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (query) {
-      BooksAPI.search(query).then((books) => {
-        setBooks(books);
-      }).catch((err) => {
-        console.log(err);
-      });
+      BooksAPI.search(query)
+        .then((books) => {
+          setBooks(books);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }, [query])
+  }, [query]);
 
   return (
     <div className="search-books">
@@ -28,15 +30,19 @@ const SearchPage = () => {
           Close
         </Link>
         <div className="search-books-input-wrapper">
-          <input type="text" placeholder="Search by title, author, or ISBN" value={query}
-            onChange={handleChange} />
+          <input
+            type="text"
+            placeholder="Search by title, author, or ISBN"
+            value={query}
+            onChange={handleChange}
+          />
         </div>
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {books.error ? "No books found" : books.map((book) => (
-            <Book key={book.id} book={book} />
-          ))}
+          {books.error
+            ? "No books found"
+            : books.map((book) => <Book key={book.id} book={book} />)}
         </ol>
       </div>
     </div>

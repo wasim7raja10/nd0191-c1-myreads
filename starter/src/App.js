@@ -5,17 +5,9 @@ import { Route, Routes } from "react-router-dom";
 import React from "react";
 
 function App() {
-
-
   return (
     <Routes className="app">
-      <Route
-        exact
-        path="/"
-        element={
-          <ListBooks />
-        }
-      />
+      <Route exact path="/" element={<ListBooks />} />
       <Route path="/search" element={<SearchPage />} />
     </Routes>
   );

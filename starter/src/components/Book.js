@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-const Book = ({book}) => {
+const Book = ({ book }) => {
   return (
     <li key={book?.id}>
       <div className="book">
@@ -29,7 +29,7 @@ const Book = ({book}) => {
         <div className="book-authors">{book?.authors}</div>
       </div>
     </li>
-  )
-}
+  );
+};
 
-export default Book
+export default Book;
