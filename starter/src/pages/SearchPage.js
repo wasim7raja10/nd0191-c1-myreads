@@ -12,18 +12,12 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    console.log(query);
-    if (query) {
-      BooksAPI.search(query)
-        .then((books) => {
-          setBooks(books);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      setBooks([]);
-    }
+    const fetchBooks = async () => {
+      const books = await BooksAPI.search(query);
+      setBooks(books);
+    };
+    if (query) fetchBooks();
+    else setBooks([]);
   }, [query]);
 
   return (
@@ -43,9 +37,11 @@ const SearchPage = () => {
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {books.error
-            ? "No books found"
-            : books.map((book) => <Book key={book.id} book={book} />)}
+          {!query
+            ? "Please enter a search term"
+            : books.length > 0
+            ? books.map((book) => <Book key={book.id} book={book} />)
+            : "No results found"}
         </ol>
       </div>
     </div>
