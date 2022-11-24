@@ -1,58 +1,45 @@
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+
 import "./App.css";
+import * as BooksAPI from "./BooksAPI";
 import ListBooks from "./pages/ListBooks";
 import SearchPage from "./pages/SearchPage";
-import { Route, Routes } from "react-router-dom";
-import React from "react";
-import * as BooksAPI from "./BooksAPI";
 
 function App() {
-  const [wantToRead, setWantToRead] = React.useState([]);
-  const [currentlyReading, setCurrentlyReading] = React.useState([]);
-  const [read, setRead] = React.useState([]);
+  const [booksOnShelves, setBooksOnShelves] = React.useState([]);
 
   React.useEffect(() => {
     const getAllBooks = async () => {
       const allBooks = await BooksAPI.getAll();
       allBooks.forEach((books) => {
-        if (books.shelf === "wantToRead") {
-          setWantToRead((prev) => [...prev, books]);
-        } else if (books.shelf === "currentlyReading") {
-          setCurrentlyReading((prev) => [...prev, books]);
-        } else if (books.shelf === "read") {
-          setRead((prev) => [...prev, books]);
-        }
+        setBooksOnShelves((booksOnShelves) => [
+          ...booksOnShelves,
+          { book: books, shelf: books.shelf },
+        ]);
       });
     };
     getAllBooks();
-
-    return () => {
-      setWantToRead([]);
-      setCurrentlyReading([]);
-      setRead([]);
-    };
   }, []);
 
-  const setBookShelf = (book, oldShelf, newShelf) => {
-    BooksAPI.update(book, newShelf);
-    if (newShelf === "currentlyReading") {
-      setCurrentlyReading((prev) => [...prev, book]);
-    }
-    if (newShelf === "wantToRead") {
-      setWantToRead((prev) => [...prev, book]);
-    }
-    if (newShelf === "read") {
-      setRead((prev) => [...prev, book]);
-    }
-    if (oldShelf === "currentlyReading") {
-      setCurrentlyReading((prev) => prev.filter((b) => b.id !== book.id));
-    }
-    if (oldShelf === "wantToRead") {
-      setWantToRead((prev) => prev.filter((b) => b.id !== book.id));
-    }
-    if (oldShelf === "read") {
-      setRead((prev) => prev.filter((b) => b.id !== book.id));
-    }
+  const setBookShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((res) => {
+      const newBooksOnShelves = booksOnShelves.map((books) => {
+        if (books.book.id === book.id) {
+          books.shelf = shelf;
+        }
+        return books;
+      });
+      setBooksOnShelves(newBooksOnShelves);
+      if (!booksOnShelves.find((books) => books.book.id === book.id)) {
+        setBooksOnShelves((booksOnShelves) => [
+          ...booksOnShelves,
+          { book: book, shelf: shelf },
+        ]);
+      }
+    });
   };
+
   return (
     <Routes className="app">
       <Route
@@ -60,16 +47,19 @@ function App() {
         path="/"
         element={
           <ListBooks
-            currentlyReading={currentlyReading}
-            wantToRead={wantToRead}
-            read={read}
+            booksOnShelves={booksOnShelves}
             setBookShelf={setBookShelf}
           />
         }
       />
       <Route
         path="/search"
-        element={<SearchPage setBookShelf={setBookShelf} />}
+        element={
+          <SearchPage
+            booksOnShelves={booksOnShelves}
+            setBookShelf={setBookShelf}
+          />
+        }
       />
     </Routes>
   );

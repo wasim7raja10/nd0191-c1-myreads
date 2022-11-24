@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import Book from "../components/Book";
+import { shelfNames, shelves } from "../data/shelves";
 
-const listOfShelves = ["Currently Reading", "Want to Read", "Read"];
-
-const ListBooks = ({ currentlyReading, wantToRead, read, setBookShelf }) => {
+const ListBooks = ({ booksOnShelves, setBookShelf }) => {
   return (
     <div className="list-books">
       <div className="list-books-title">
@@ -12,43 +12,22 @@ const ListBooks = ({ currentlyReading, wantToRead, read, setBookShelf }) => {
       </div>
       <div className="list-books-content">
         <div>
-          {listOfShelves.map((shelf) => (
-            <div className="bookshelf" key={shelf}>
+          {shelves.map((shelf) => (
+            <div key={shelf} className="bookshelf">
               <h2 className="bookshelf-title">{shelf}</h2>
               <div className="bookshelf-books">
-                {shelf === "Currently Reading" && (
-                  <ol className="books-grid">
-                    {currentlyReading.map((book) => (
+                <ol className="books-grid">
+                  {booksOnShelves
+                    .filter((books) => books.shelf === shelfNames[shelf])
+                    .map((books) => (
                       <Book
-                        key={book.id}
-                        book={book}
+                        key={books.book.id}
+                        book={books.book}
                         onUpdateShelf={setBookShelf}
+                        currentShelf={books.shelf}
                       />
                     ))}
-                  </ol>
-                )}
-                {shelf === "Want to Read" && (
-                  <ol className="books-grid">
-                    {wantToRead.map((book) => (
-                      <Book
-                        key={book.id}
-                        book={book}
-                        onUpdateShelf={setBookShelf}
-                      />
-                    ))}
-                  </ol>
-                )}
-                {shelf === "Read" && (
-                  <ol className="books-grid">
-                    {read.map((book) => (
-                      <Book
-                        key={book.id}
-                        book={book}
-                        onUpdateShelf={setBookShelf}
-                      />
-                    ))}
-                  </ol>
-                )}
+                </ol>
               </div>
             </div>
           ))}

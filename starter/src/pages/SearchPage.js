@@ -1,24 +1,40 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+
 import * as BooksAPI from "../BooksAPI";
 import Book from "../components/Book";
 
-const SearchPage = ({ setBookShelf }) => {
+const SearchPage = ({ booksOnShelves, setBookShelf }) => {
   const [query, setQuery] = React.useState("");
-  const [books, setBooks] = React.useState([]);
+  const [searchResults, setSearchResults] = React.useState([]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
-  };
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      const books = await BooksAPI.search(query);
-      setBooks(books);
-    };
-    if (query) fetchBooks();
-    else setBooks([]);
-  }, [query]);
+    if (e.target.value) {
+      BooksAPI.search(e.target.value).then((res) => {
+        if (res.error) {
+          setSearchResults([]);
+        } else {
+          res.forEach((book) => {
+            const bookOnShelf = booksOnShelves.find(
+              (books) => books.book.id === book.id
+            );
+            if (bookOnShelf) {
+              book.shelf = bookOnShelf.shelf;
+            } else {
+              book.shelf = "none";
+            }
+          });
+          setSearchResults(res);
+        }
+      });
+    }
+
+    if (!e.target.value) {
+      setSearchResults([]);
+    }
+  };
 
   return (
     <div className="search-books">
@@ -38,12 +54,17 @@ const SearchPage = ({ setBookShelf }) => {
       <div className="search-books-results">
         <ol className="books-grid">
           {!query
-            ? "Please enter a search term"
-            : books.length > 0
-            ? books.map((book) => (
-                <Book key={book.id} book={book} onUpdateShelf={setBookShelf} />
-              ))
-            : "No results found"}
+            ? "Search for Books"
+            : !searchResults.length
+            ? "No result found"
+            : searchResults.map((book) => (
+                <Book
+                  key={book.id}
+                  book={book}
+                  onUpdateShelf={setBookShelf}
+                  currentShelf={book.shelf}
+                />
+              ))}
         </ol>
       </div>
     </div>

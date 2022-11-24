@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Book = ({ book, onUpdateShelf }) => {
-  const [shelf, setShelf] = React.useState(book.shelf);
+const Book = ({ book, onUpdateShelf, currentShelf }) => {
+  const [shelf, setShelf] = useState(currentShelf);
+
   const handleChange = (e) => {
+    onUpdateShelf(book, e.target.value);
     setShelf(e.target.value);
-    onUpdateShelf(book, shelf, e.target.value);
   };
+
   return (
     <li key={book?.id}>
       <div className="book">
