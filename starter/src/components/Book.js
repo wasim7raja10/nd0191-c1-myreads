@@ -1,6 +1,12 @@
 import React from "react";
 
-const Book = ({ book }) => {
+const Book = ({ book, onUpdateShelf }) => {
+  const [shelf, setShelf] = React.useState(book.shelf);
+  const handleChange = (e) => {
+    onUpdateShelf(book, shelf, e.target.value);
+    setShelf(e.target.value);
+    console.log(e.target);
+  };
   return (
     <li key={book?.id}>
       <div className="book">
@@ -14,7 +20,7 @@ const Book = ({ book }) => {
             }}
           ></div>
           <div className="book-shelf-changer">
-            <select>
+            <select onChange={handleChange} value={shelf}>
               <option value="move" disabled>
                 Move to...
               </option>
