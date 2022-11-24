@@ -20,6 +20,9 @@ function App() {
       });
     };
     getAllBooks();
+    return () => {
+      setBooksOnShelves([]);
+    }
   }, []);
 
   const setBookShelf = (book, shelf) => {
