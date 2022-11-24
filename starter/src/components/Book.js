@@ -3,9 +3,8 @@ import React from "react";
 const Book = ({ book, onUpdateShelf }) => {
   const [shelf, setShelf] = React.useState(book.shelf);
   const handleChange = (e) => {
-    onUpdateShelf(book, shelf, e.target.value);
     setShelf(e.target.value);
-    console.log(e.target);
+    onUpdateShelf(book, shelf, e.target.value);
   };
   return (
     <li key={book?.id}>

@@ -24,6 +24,12 @@ function App() {
       });
     };
     getAllBooks();
+
+    return () => {
+      setWantToRead([]);
+      setCurrentlyReading([]);
+      setRead([]);
+    };
   }, []);
 
   const setBookShelf = (book, oldShelf, newShelf) => {
@@ -61,7 +67,10 @@ function App() {
           />
         }
       />
-      <Route path="/search" element={<SearchPage />} />
+      <Route
+        path="/search"
+        element={<SearchPage setBookShelf={setBookShelf} />}
+      />
     </Routes>
   );
 }

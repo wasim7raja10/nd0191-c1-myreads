@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
 import Book from "../components/Book";
 
-const SearchPage = () => {
+const SearchPage = ({ setBookShelf }) => {
   const [query, setQuery] = React.useState("");
   const [books, setBooks] = React.useState([]);
 
@@ -40,7 +40,9 @@ const SearchPage = () => {
           {!query
             ? "Please enter a search term"
             : books.length > 0
-            ? books.map((book) => <Book key={book.id} book={book} />)
+            ? books.map((book) => (
+                <Book key={book.id} book={book} onUpdateShelf={setBookShelf} />
+              ))
             : "No results found"}
         </ol>
       </div>
