@@ -12,6 +12,7 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
+    console.log(query);
     if (query) {
       BooksAPI.search(query)
         .then((books) => {
@@ -20,6 +21,8 @@ const SearchPage = () => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      setBooks([]);
     }
   }, [query]);
 
